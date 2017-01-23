@@ -1,0 +1,33 @@
+{
+  "intents": [
+ 	{
+      "intent": "CONVERTBASEINTENT",
+      "slots": [
+        {
+          "name": "toConvert",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "initBase",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "finalBase",
+          "type": "AMAZON.NUMBER"
+        } 
+      ] 
+    },
+    {
+      "intent": "CONVERT"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

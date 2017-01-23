@@ -1,0 +1,15 @@
+CONVERTBASEINTENT convert {toConvert} from base {initBase} to base {finalBase}
+CONVERTBASEINTENT convert {toConvert} from base {initBase} to {finalBase}
+CONVERTBASEINTENT convert {toConvert} in base {initBase} to base {finalBase}
+CONVERTBASEINTENT convert {toConvert} in base {initBase} to {finalBase}
+CONVERTBASEINTENT convert {toConvert} to base {finalBase} from base {initBase}
+CONVERTBASEINTENT convert {toConvert} to base {finalBase} from {initBase}
+CONVERTBASEINTENT change {toConvert} from base {initBase} to base {finalBase}
+CONVERTBASEINTENT change {toConvert} from base {initBase} to {finalBase}
+CONVERTBASEINTENT change {toConvert} from base {initBase} to base {finalBase}
+CONVERTBASEINTENT change {toConvert} in base {initBase} to base {finalBase}
+CONVERTBASEINTENT change {toConvert} in base {initBase} to {finalBase}
+CONVERTBASEINTENT transform {toConvert} from base {initBase} to base {finalBase}
+CONVERTBASEINTENT transform {toConvert} from base {initBase} to {finalBase}
+CONVERTBASEINTENT transform {toConvert} to base {finalBase} to base {initBase}
+CONVERTBASEINTENT transform {toConvert} to base {finalBase} to {initBase}
