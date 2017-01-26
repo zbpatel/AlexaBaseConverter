@@ -32,7 +32,11 @@ def base_converter_intent_handler(intent):
         reprompt_text = ""
         should_end_session = False
     else:
-        converted_num = int()
+        # converting the number from init_base into base 10 using the int method
+        converted_num = int(num_to_convert, init_base)
+
+        # converting a number from base 10 into final_base
+
         title = "Base Converted"
         output = num_to_convert + " in base " + final_base + " is " + converted_num
         reprompt_text = ""
@@ -45,7 +49,9 @@ def base_converter_intent_handler(intent):
 def pull_bases_from_intent(intent):
     """
     Given a BASECONVERTERINTENT, pulls the number to convert, the initial base (if specified)
-    and the final base. (and returns them to the user)
+    and the final base.
+
+    Returns: num_to_convert as a string, init_base and final_base as integers
     """
     # pulling the various user inputs from the intent
     # note, we don't conver the actual number to an int, because
@@ -72,32 +78,33 @@ def is_in_base(num_str, base):
 
     Handles bases up to 32
     """
+    # Creating a list of all the proper chars in the specified base by slicing our BASE_STRING
+    chars_in_base = BASE_STRING[base]
+    # Note: this algorithm isn't the most efficient, but it will gurantee that num_str is proper
     for i in range(0, len(num_str)):
-        if num_str[i] > base:
+        if not num_str[i] in chars_in_base:
             return False
-        i += 1
 
+    # Returning true only if num_str is proven not to be bad
     return True
 
-# Converts a number in non-base 10 to base 10
-def convertToTen(num, base):
+
+def convert_from_ten(num, base, conv=""):
     """
-    converts an integer in base 2-10 to base 10
+    Converts a number from base 10 into a number of base base
+    Takes in a string conv, which keeps track of the conversion process and is returned at the end
+
+    I did this recursively for funsies, but you can do it iteratively by doing something like:
+    conv = ""
+    while num != 0:
+        conv = BASE_STRING[num % base] + conv
+        num /= base
+    return conv
     """
-    # checking that the base is an integer (and not a string / double)
-    # this isn't really necessary because base should never be int anyways, but its good practice
-    assert base.isinstance(int)
-
-    converted_num, position = 0, 1
-
-    # note we don't check that the number is in the proper base, because we do that elsewhere
-    while num > 10:
-        converted_num += (num % 10) * base ** position
-        num /= 10
-        
-    return converted_num
-
-
+    if num == 0:
+        return conv
+    else:
+        return convert_from_ten(num / base, base, conv + BASE_STRING[num % base])
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -125,14 +132,15 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'shouldEndSession': should_end_session
     }
 
-# constructs a larger response including session attributes
 def build_response(session_attributes, speechlet_response):
+    """
+    constructs a larger response including session attributes
+    """
     return {
         'version': '1.0',
         'sessionAttributes': session_attributes,
         'response': speechlet_response
     }
-
 
 # --------------- Functions that control the skill's behavior ------------------
 
@@ -152,8 +160,13 @@ def get_welcome_response():
 
 
 def handle_session_end_request():
+    """
+    Method that should build a string of text for the user that is given when the session ends
+    in practice though, this method doesn't do anything because the user doesn't need a reprompt
+    """
     card_title = "Session Ended"
-    speech_output = "" # if the session ends / base has been converted properly the user doesn't need a end message
+    # if the session ends / base has been converted properly the user doesn't need a end message
+    speech_output = ""
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
@@ -220,7 +233,7 @@ def lambda_handler(event, context):
     prevent someone else from configuring a skill that sends requests to this
     function.
     """
-    if (event['session']['application']['applicationId'] != "amzn1.echo-sdk-ams.app.[amzn1.ask.skill.287421b7-ee96-4331-b4bd-7db736530333]"):
+    if event['session']['application']['applicationId'] != "amzn1.echo-sdk-ams.app.[amzn1.ask.skill.287421b7-ee96-4331-b4bd-7db736530333]":
         raise ValueError("Invalid Application ID")
 
     if event['session']['new']:
