@@ -13,3 +13,12 @@ CONVERTBASEINTENT transform {toConvert} from base {initBase} to base {finalBase}
 CONVERTBASEINTENT transform {toConvert} from base {initBase} to {finalBase}
 CONVERTBASEINTENT transform {toConvert} to base {finalBase} to base {initBase}
 CONVERTBASEINTENT transform {toConvert} to base {finalBase} to {initBase}
+
+CONVERTBASEINTENT convert {toConvert} to base {finalBase}
+CONVERTBASEINTENT change {toConvert} to base {finalBase}
+CONVERTBASEINTENT transform {toConvert} to base {finalBase}
+CONVERTBASEINTENT what is {toConvert} in base {finalBase}
+CONVERTBASEINTENT tell me {toConvert} in base {finalBase}
+CONVERTBASEINTENT compute {toConvert} in base {finalBase}
+CONVERTBASEINTENT what is {toConvert} in base {finalBase}
+CONVERTBASEINTENT find {toConvert} in base {finalBase}
