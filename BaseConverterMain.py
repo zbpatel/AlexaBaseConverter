@@ -9,26 +9,26 @@ DO NOT publish or commericalize this code without my permission.
 from __future__ import print_function
 
 # this string is meant to be used as a reference to find the character that
-# corresponds to a given value 0-32
+# corresponds to a given value 0-36
 BASE_STRING = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 # logic for handling the base conversion
 def base_converter_intent_handler(intent):
     """
     Central logic method to handle intent requests for the UserWarning
-    This method will handle the BASECONVERTERINTENT, which is currently the only intent
+    This method will handle the CONVERTBASEINTENT, which is currently the only intent
     At the end of this method, a completed response will be returned
     """
     num_to_convert, init_base, final_base = pull_bases_from_intent(intent)
 
-    if init_base < 1 or init_base > 9:
+    if init_base < 1 or init_base > 10:
         title = "Failed to Convert Base"
         output = "Failed to convert, because your initial base is not between 1 and 10."
         reprompt_text = ""
         should_end_session = False
-    elif final_base < 1 or final_base > 32:
+    elif final_base < 1 or final_base > 36:
         title = "Failed to Convert Base"
-        output = "Failed to convert, because your final base is not between 1 and 32."
+        output = "Failed to convert, because your final base is not between 1 and 36."
         reprompt_text = ""
         should_end_session = False
     else:
@@ -36,9 +36,11 @@ def base_converter_intent_handler(intent):
         converted_num = int(num_to_convert, init_base)
 
         # converting a number from base 10 into final_base
+        converted_num = convert_from_ten(converted_num, final_base)
+        # wow, isn't it exciting?  that's where all the magic happens
 
         title = "Base Converted"
-        output = num_to_convert + " in base " + final_base + " is " + converted_num
+        output = str(num_to_convert) + " in base " + str(final_base) + " is " + str(converted_num)
         reprompt_text = ""
         should_end_session = True
 
@@ -48,11 +50,14 @@ def base_converter_intent_handler(intent):
 # separating the method to pull bases from an intent so that we only need one converter handler
 def pull_bases_from_intent(intent):
     """
-    Given a BASECONVERTERINTENT, pulls the number to convert, the initial base (if specified)
+    Given a CONVERTBASEINTENT, pulls the number to convert, the initial base (if specified)
     and the final base.
 
     Returns: num_to_convert as a string, init_base and final_base as integers
     """
+    # first, we must move to searching through the intent slots
+    intent = intent["slots"]
+
     # pulling the various user inputs from the intent
     # note, we don't conver the actual number to an int, because
     # we are going to use the int method later to convert it to its first base
@@ -63,20 +68,21 @@ def pull_bases_from_intent(intent):
     # we don't specify an exception type here because we aren't doing anything with that info
     try:
         init_base = int(intent["init_base"]["value"])
-    except: 
+    except:
         init_base = 10
 
     final_base = int(intent["final_base"]["value"])
 
     return num_to_convert, init_base, final_base
 
-# Note: for this method, num should be a string (to allow for bases higher than 32)
+
+# Note: for this method, num should be a string (to allow for bases higher than 36)
 def is_in_base(num_str, base):
     """
     Returns True if the num is a valid number in base base
     (Returns False otherwise)
 
-    Handles bases up to 32
+    Handles bases up to 36
     """
     # Creating a list of all the proper chars in the specified base by slicing our BASE_STRING
     chars_in_base = BASE_STRING[base]
@@ -104,7 +110,7 @@ def convert_from_ten(num, base, conv=""):
     if num == 0:
         return conv
     else:
-        return convert_from_ten(num / base, base, conv + BASE_STRING[num % base])
+        return convert_from_ten(num / base, base, BASE_STRING[num % base] + conv)
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -150,10 +156,10 @@ def get_welcome_response():
     """
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Tell me a number, and I can convert it to any base up to 32."
+    speech_output = "Tell me a number, and I can convert it to any base up to 36."
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me a number, and a base between 2 and 32, and I can convert it."
+    reprompt_text = "Please tell me a number, and a base between 2 and 36, and I can convert it."
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
@@ -203,7 +209,7 @@ def on_intent(intent_request, session):
 
     # Dispatch to your skill's intent handlers
     # using the pull_bases_from_intent method allows us to handle everything through one intent
-    if intent_name == "BASECONVERTERINTENT":
+    if intent_name == "CONVERTBASEINTENT":
         return base_converter_intent_handler(intent)
     else:
         raise ValueError("Invalid intent")
@@ -233,7 +239,7 @@ def lambda_handler(event, context):
     prevent someone else from configuring a skill that sends requests to this
     function.
     """
-    if event['session']['application']['applicationId'] != "amzn1.echo-sdk-ams.app.[amzn1.ask.skill.287421b7-ee96-4331-b4bd-7db736530333]":
+    if event['session']['application']['applicationId'] != "amzn1.ask.skill.287421b7-ee96-4331-b4bd-7db736530333":
         raise ValueError("Invalid Application ID")
 
     if event['session']['new']:

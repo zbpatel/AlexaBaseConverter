@@ -20,5 +20,16 @@ CONVERTBASEINTENT transform {to_convert} to base {final_base}
 CONVERTBASEINTENT what is {to_convert} in base {final_base}
 CONVERTBASEINTENT tell me {to_convert} in base {final_base}
 CONVERTBASEINTENT compute {to_convert} in base {final_base}
-CONVERTBASEINTENT what is {to_convert} in base {final_base}
 CONVERTBASEINTENT find {to_convert} in base {final_base}
+
+CONVERTBASEINTENT what {to_convert} changed to base {final_base} is
+CONVERTBASEINTENT what {to_convert} transformed to base {final_base} is
+CONVERTBASEINTENT what {to_convert} in base {final_base} is
+CONVERTBASEINTENT to tell me what {to_convert} in base {final_base} is
+CONVERTBASEINTENT to compute what {to_convert} in base {final_base} is
+
+CONVERTBASEINTENT to change {toConvert} to base {final_base}
+CONVERTBASEINTENT to transform {toConvert} to base {final_base}
+CONVERTBASEINTENT to tell me {to_convert} in base {final_base}
+CONVERTBASEINTENT to compute {to_convert} in base {final_base}
+CONVERTBASEINTENT to find what {to_convert} in base {final_base} is
