@@ -13,6 +13,7 @@ from __future__ import print_function
 BASE_STRING = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 # logic for handling the base conversion
+# Intents that lead to this method: CONVERTBASEINTENT
 def base_converter_intent_handler(intent):
     """
     Central logic method to handle intent requests for the UserWarning
@@ -21,15 +22,29 @@ def base_converter_intent_handler(intent):
     """
     num_to_convert, init_base, final_base = pull_bases_from_intent(intent)
 
-    if init_base < 1 or init_base > 10:
+    # constructing a special message if any of the input variables are bad
+    # note, its not the most space efficient code to have, but having a large if/else allows 
+    # for our error messages to easily be changed and compared to each other
+    if isinstance(final_base, str):
         title = "Failed to Convert Base"
-        output = "Failed to convert, because your initial base is not between 1 and 10."
-        reprompt_text = ""
+        output = "I couldn't handle your request, because you didn't give me a number to convert."
+        reprompt_text = "Please try again while providing me a number."
+        should_end_session = False
+    elif isinstance(final_base, str):
+        title = "Failed to Convert Base"
+        output = "I couldn't handlde your request, because your final base was not a number."
+        reprompt_text = "Please try again with a proper number for the final base."
+        should_end_session = False
+    # If the numbers are integers, we check to see if they are within proper boundaries
+    elif init_base < 1 or init_base > 10:
+        title = "Failed to Convert Base"
+        output = "I couldn't handle your request, because your initial base was not between 1 and 10."
+        reprompt_text = "Please try again with a base between 1 and 10."
         should_end_session = False
     elif final_base < 1 or final_base > 36:
         title = "Failed to Convert Base"
-        output = "Failed to convert, because your final base is not between 1 and 36."
-        reprompt_text = ""
+        output = "I couldn't handle your request, because your final base was not between 1 and 36."
+        reprompt_text = "Please try again with a base between 1 and 36."
         should_end_session = False
     else:
         # converting the number from init_base into base 10 using the int method
@@ -61,17 +76,25 @@ def pull_bases_from_intent(intent):
     # pulling the various user inputs from the intent
     # note, we don't conver the actual number to an int, because
     # we are going to use the int method later to convert it to its first base
-    num_to_convert = intent["to_convert"]["value"]
+    try:
+        num_to_convert = intent["to_convert"]["value"]
+    except:
+        num_to_convert = 10 # we don't provide an error message here to allow for this parameter to go empty
     # note, init_base cannot be greater than 10, because it is unclear if AMAZON.NUMBER
     # handles number in base > 10
 
     # we don't specify an exception type here because we aren't doing anything with that info
+    # but, if the type fails, then we pass through a string telling us what went wrong so 
+    # we can construct a message for the user later
     try:
         init_base = int(intent["init_base"]["value"])
     except:
-        init_base = 10
+        init_base = "bad init_base input"
 
-    final_base = int(intent["final_base"]["value"])
+    try:
+        final_base = int(intent["final_base"]["value"])
+    except:
+        final_base = "bad final_base input"
 
     return num_to_convert, init_base, final_base
 
@@ -126,8 +149,8 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         },
         'card': {
             'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
+            'title': title,
+            'content': output
         },
         'reprompt': {
             'outputSpeech': {
@@ -143,28 +166,29 @@ def build_response(session_attributes, speechlet_response):
     constructs a larger response including session attributes
     """
     return {
-        'version': '1.0',
+        'version': '1.0.B', # NOTE: update this with current app version
         'sessionAttributes': session_attributes,
         'response': speechlet_response
     }
 
 # --------------- Functions that control the skill's behavior ------------------
 
+# Intents that lead to this method: when no intent is specified, AMAZON.HelpIntent
 def get_welcome_response():
     """
     Prompts the user for a response if they don't say anything when starting the session
     """
     session_attributes = {}
     card_title = "Welcome"
-    speech_output = "Tell me a number, and I can convert it to any base up to 36."
+    speech_output = "Tell me a number, and a base up to 36, and I can convert it for you."
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "Please tell me a number, and a base between 2 and 36, and I can convert it."
+    reprompt_text = "Would you like me to convert a number?"
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
-
+# Intents that lead to this method: AMAZON.CancelIntent
 def handle_session_end_request():
     """
     Method that should build a string of text for the user that is given when the session ends
@@ -172,7 +196,7 @@ def handle_session_end_request():
     """
     card_title = "Session Ended"
     # if the session ends / base has been converted properly the user doesn't need a end message
-    speech_output = ""
+    speech_output = "" #Thank you for using Base Converter."
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
@@ -197,7 +221,7 @@ def on_launch(launch_request, session):
     # Dispatch to your skill's launch
     return get_welcome_response()
 
-
+# Selects which behavior the skill will have based on starting intent
 def on_intent(intent_request, session):
     """ Called when the user specifies an intent for this skill """
 
@@ -211,6 +235,10 @@ def on_intent(intent_request, session):
     # using the pull_bases_from_intent method allows us to handle everything through one intent
     if intent_name == "CONVERTBASEINTENT":
         return base_converter_intent_handler(intent)
+    elif intent_name == "AMAZON.HelpIntent":
+        return get_welcome_response()
+    elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
+        return handle_session_end_request()
     else:
         raise ValueError("Invalid intent")
 

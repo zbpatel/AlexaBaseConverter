@@ -18,9 +18,6 @@
       ] 
     },
     {
-      "intent": "CONVERT"
-    },
-    {
       "intent": "AMAZON.HelpIntent"
     },
     {

@@ -11,8 +11,46 @@ CONVERTBASEINTENT change {to_convert} in base {init_base} to base {final_base}
 CONVERTBASEINTENT change {to_convert} in base {init_base} to {final_base}
 CONVERTBASEINTENT transform {to_convert} from base {init_base} to base {final_base}
 CONVERTBASEINTENT transform {to_convert} from base {init_base} to {final_base}
-CONVERTBASEINTENT transform {to_convert} to base {final_base} to base {init_base}
-CONVERTBASEINTENT transform {to_convert} to base {final_base} to {init_base}
+CONVERTBASEINTENT transform {to_convert} to base {final_base} from base {init_base}
+CONVERTBASEINTENT transform {to_convert} to base {final_base} from {init_base}
+CONVERTBASEINTENT translate {to_convert} to base {final_base} from base {init_base}
+CONVERTBASEINTENT translate {to_convert} to base {final_base} from {init_base}
+
+CONVERTBASEINTENT please convert {to_convert} from base {init_base} to base {final_base}
+CONVERTBASEINTENT please convert {to_convert} from base {init_base} to {final_base}
+CONVERTBASEINTENT please convert {to_convert} in base {init_base} to base {final_base}
+CONVERTBASEINTENT please convert {to_convert} in base {init_base} to {final_base}
+CONVERTBASEINTENT please convert {to_convert} to base {final_base} from base {init_base}
+CONVERTBASEINTENT please convert {to_convert} to base {final_base} from {init_base}
+CONVERTBASEINTENT please change {to_convert} from base {init_base} to base {final_base}
+CONVERTBASEINTENT please change {to_convert} from base {init_base} to {final_base}
+CONVERTBASEINTENT please change {to_convert} from base {init_base} to base {final_base}
+CONVERTBASEINTENT please change {to_convert} in base {init_base} to base {final_base}
+CONVERTBASEINTENT please change {to_convert} in base {init_base} to {final_base}
+CONVERTBASEINTENT please transform {to_convert} from base {init_base} to base {final_base}
+CONVERTBASEINTENT please transform {to_convert} from base {init_base} to {final_base}
+CONVERTBASEINTENT please transform {to_convert} to base {final_base} from base {init_base}
+CONVERTBASEINTENT please transform {to_convert} to base {final_base} from {init_base}
+CONVERTBASEINTENT please translate {to_convert} to base {final_base} from base {init_base}
+CONVERTBASEINTENT please translate {to_convert} to base {final_base} from {init_base}
+
+CONVERTBASEINTENT convert {to_convert} from base {init_base} to base {final_base} please 
+CONVERTBASEINTENT convert {to_convert} from base {init_base} to {final_base} please 
+CONVERTBASEINTENT convert {to_convert} in base {init_base} to base {final_base} please 
+CONVERTBASEINTENT convert {to_convert} in base {init_base} to {final_base} please 
+CONVERTBASEINTENT convert {to_convert} to base {final_base} from base {init_base} please 
+CONVERTBASEINTENT convert {to_convert} to base {final_base} from {init_base} please 
+CONVERTBASEINTENT change {to_convert} from base {init_base} to base {final_base} please 
+CONVERTBASEINTENT change {to_convert} from base {init_base} to {final_base} please 
+CONVERTBASEINTENT change {to_convert} from base {init_base} to base {final_base} please 
+CONVERTBASEINTENT change {to_convert} in base {init_base} to base {final_base} please 
+CONVERTBASEINTENT change {to_convert} in base {init_base} to {final_base} please 
+CONVERTBASEINTENT transform {to_convert} from base {init_base} to base {final_base} please 
+CONVERTBASEINTENT transform {to_convert} from base {init_base} to {final_base} please 
+CONVERTBASEINTENT transform {to_convert} to base {final_base} from base {init_base} please 
+CONVERTBASEINTENT transform {to_convert} to base {final_base} from {init_base} please 
+CONVERTBASEINTENT translate {to_convert} to base {final_base} from base {init_base} please 
+CONVERTBASEINTENT translate {to_convert} to base {final_base} from {init_base} please 
 
 CONVERTBASEINTENT convert {to_convert} to base {final_base}
 CONVERTBASEINTENT change {to_convert} to base {final_base}
@@ -21,15 +59,79 @@ CONVERTBASEINTENT what is {to_convert} in base {final_base}
 CONVERTBASEINTENT tell me {to_convert} in base {final_base}
 CONVERTBASEINTENT compute {to_convert} in base {final_base}
 CONVERTBASEINTENT find {to_convert} in base {final_base}
+CONVERTBASEINTENT translate {to_convert} into base {final_base}
+CONVERTBASEINTENT translate {to_convert} to base {final_base}
+CONVERTBASEINTENT give me {to_convert} in base {final_base}
+
+CONVERTBASEINTENT please convert {to_convert} to base {final_base}
+CONVERTBASEINTENT please change {to_convert} to base {final_base}
+CONVERTBASEINTENT please transform {to_convert} to base {final_base}
+CONVERTBASEINTENT please tell me {to_convert} in base {final_base}
+CONVERTBASEINTENT please compute {to_convert} in base {final_base}
+CONVERTBASEINTENT please find {to_convert} in base {final_base}
+CONVERTBASEINTENT please translate {to_convert} into base {final_base}
+CONVERTBASEINTENT please translate {to_convert} to base {final_base}
+CONVERTBASEINTENT please give me {to_convert} in base {final_base}
+
+CONVERTBASEINTENT convert {to_convert} to base {final_base} please 
+CONVERTBASEINTENT change {to_convert} to base {final_base} please 
+CONVERTBASEINTENT transform {to_convert} to base {final_base} please 
+CONVERTBASEINTENT what is {to_convert} in base {final_base} please 
+CONVERTBASEINTENT tell me {to_convert} in base {final_base} please 
+CONVERTBASEINTENT compute {to_convert} in base {final_base} please 
+CONVERTBASEINTENT find {to_convert} in base {final_base} please 
+CONVERTBASEINTENT translate {to_convert} into base {final_base} please 
+CONVERTBASEINTENT translate {to_convert} to base {final_base} please 
+CONVERTBASEINTENT give me {to_convert} in base {final_base} please 
 
 CONVERTBASEINTENT what {to_convert} changed to base {final_base} is
 CONVERTBASEINTENT what {to_convert} transformed to base {final_base} is
 CONVERTBASEINTENT what {to_convert} in base {final_base} is
+CONVERTBASEINTENT what {to_convert} looks like in {final_base}
 CONVERTBASEINTENT to tell me what {to_convert} in base {final_base} is
 CONVERTBASEINTENT to compute what {to_convert} in base {final_base} is
+CONVERTBASEINTENT how to say {to_convert} in base {final_base}
+CONVERTBASEINTENT how to represent {to_convert} in base {final_base}
+CONVERTBASEINTENT how to translate {to_convert} into base {final_base}
+CONVERTBASEINTENT how to translate {to_convert} from base {init_base} to base {final_base}
+CONVERTBASEINTENT how to translate {to_convert} from base {init_base} to {final_base}
+
+CONVERTBASEINTENT what {to_convert} changed to base {final_base} is please 
+CONVERTBASEINTENT what {to_convert} transformed to base {final_base} is please 
+CONVERTBASEINTENT what {to_convert} in base {final_base} is please 
+CONVERTBASEINTENT what {to_convert} looks like in {final_base} please 
+CONVERTBASEINTENT to tell me what {to_convert} in base {final_base} is please 
+CONVERTBASEINTENT to compute what {to_convert} in base {final_base} is please 
+CONVERTBASEINTENT how to say {to_convert} in base {final_base} please 
+CONVERTBASEINTENT how to represent {to_convert} in base {final_base} please 
+CONVERTBASEINTENT how to translate {to_convert} into base {final_base} please 
+CONVERTBASEINTENT how to translate {to_convert} from base {init_base} to base {final_base} please 
+CONVERTBASEINTENT how to translate {to_convert} from base {init_base} to {final_base} please 
 
 CONVERTBASEINTENT to change {toConvert} to base {final_base}
 CONVERTBASEINTENT to transform {toConvert} to base {final_base}
 CONVERTBASEINTENT to tell me {to_convert} in base {final_base}
 CONVERTBASEINTENT to compute {to_convert} in base {final_base}
 CONVERTBASEINTENT to find what {to_convert} in base {final_base} is
+
+CONVERTBASEINTENT to change {toConvert} to base {final_base} please
+CONVERTBASEINTENT to transform {toConvert} to base {final_base} please
+CONVERTBASEINTENT to tell me {to_convert} in base {final_base} please
+CONVERTBASEINTENT to compute {to_convert} in base {final_base} please
+CONVERTBASEINTENT to find what {to_convert} in base {final_base} is please
+
+CONVERTBASEINTENT the conversion of {to_convert} in base {final_base}
+CONVERTBASEINTENT the value of {to_convert} in base {final_base}
+CONVERTBASEINTENT {to_convert} in {final_base}
+CONVERTBASEINTENT the base {final_base} representation of {to_convert}
+CONVERTBASEINTENT the base {final_base} value of {to_convert}
+CONVERTBASEINTENT the base {final_base} version of {to_convert}
+CONVERTBASEINTENT the base {final_base} translation of {to_convert}
+
+CONVERTBASEINTENT the conversion of {to_convert} in base {final_base} please
+CONVERTBASEINTENT the value of {to_convert} in base {final_base} please
+CONVERTBASEINTENT {to_convert} in {final_base} please
+CONVERTBASEINTENT the base {final_base} representation of {to_convert} please
+CONVERTBASEINTENT the base {final_base} value of {to_convert} please
+CONVERTBASEINTENT the base {final_base} version of {to_convert} please
+CONVERTBASEINTENT the base {final_base} translation of {to_convert} please
