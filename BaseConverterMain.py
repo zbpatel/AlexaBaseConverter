@@ -25,25 +25,29 @@ def base_converter_intent_handler(intent):
     # constructing a special message if any of the input variables are bad
     # note, its not the most space efficient code to have, but having a large if/else allows 
     # for our error messages to easily be changed and compared to each other
-    if isinstance(final_base, str):
+    if num_to_convert == "bad num_to_convert input":
         title = "Failed to Convert Base"
         output = "I couldn't handle your request, because you didn't give me a number to convert."
+        card_output = output
         reprompt_text = "Please try again while providing me a number."
         should_end_session = False
-    elif isinstance(final_base, str):
+    elif final_base == "bad final_base input":
         title = "Failed to Convert Base"
         output = "I couldn't handlde your request, because your final base was not a number."
+        card_output = output
         reprompt_text = "Please try again with a proper number for the final base."
         should_end_session = False
     # If the numbers are integers, we check to see if they are within proper boundaries
     elif init_base < 1 or init_base > 10:
         title = "Failed to Convert Base"
         output = "I couldn't handle your request, because your initial base was not between 1 and 10."
+        card_output = output
         reprompt_text = "Please try again with a base between 1 and 10."
         should_end_session = False
     elif final_base < 1 or final_base > 36:
         title = "Failed to Convert Base"
         output = "I couldn't handle your request, because your final base was not between 1 and 36."
+        card_output = output
         reprompt_text = "Please try again with a base between 1 and 36."
         should_end_session = False
     else:
@@ -55,12 +59,28 @@ def base_converter_intent_handler(intent):
         # wow, isn't it exciting?  that's where all the magic happens
 
         title = "Base Converted"
-        output = str(num_to_convert) + " in base " + str(final_base) + " is " + str(converted_num)
+        output = str(num_to_convert) + " in base " + str(final_base) + " is " + str(process_output(converted_num, final_base)) + "."
+        card_output = str(num_to_convert) + " in base " + str(final_base) + " is " + str(converted_num) + "."
+
         reprompt_text = ""
         should_end_session = True
 
     session_attributes = ""
-    return build_response(session_attributes, build_speechlet_response(title, output, reprompt_text, should_end_session))
+    return build_response(session_attributes, build_speechlet_response(title, output, card_output, reprompt_text, should_end_session))
+
+# adds spaces between each letter in the word if the base is greater than 10
+# this prevents Alexa from trying to read strings of letters as a weird sounding word
+def process_output(converted_num, base):
+    if base > 10:
+        processed_num = ""
+        for digit in str(converted_num):
+            processed_num = processed_num + digit + " "
+
+        # setting up a substring slice so we can pull the trailing space off easily
+        adjust = len(processed_num) - 1
+        return processed_num[:adjust]
+    else: # no additional processing is needed if there are no letters in the converted num
+        return str(converted_num)
 
 # separating the method to pull bases from an intent so that we only need one converter handler
 def pull_bases_from_intent(intent):
@@ -79,17 +99,18 @@ def pull_bases_from_intent(intent):
     try:
         num_to_convert = intent["to_convert"]["value"]
     except:
-        num_to_convert = 10 # we don't provide an error message here to allow for this parameter to go empty
+        # theoretically, this should never be reached unless the user doesn't give a number
+        num_to_convert = "bad num_to_convert input"
     # note, init_base cannot be greater than 10, because it is unclear if AMAZON.NUMBER
     # handles number in base > 10
 
     # we don't specify an exception type here because we aren't doing anything with that info
-    # but, if the type fails, then we pass through a string telling us what went wrong so 
     # we can construct a message for the user later
+    # init_base will default to 10 if bad / no input is specified
     try:
         init_base = int(intent["init_base"]["value"])
     except:
-        init_base = "bad init_base input"
+        init_base = 10
 
     try:
         final_base = int(intent["final_base"]["value"])
@@ -138,7 +159,9 @@ def convert_from_ten(num, base, conv=""):
 # --------------- Helpers that build all of the responses ----------------------
 
 # Turns the various info in a response into an alexa readable response
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
+
+# Turns the various info in a response into an alexa readable response
+def build_speechlet_response(title, output, card_text, reprompt_text, should_end_session):
     """
     Amazon provided method that handles the construction of speech responses
     """
@@ -150,7 +173,7 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'card': {
             'type': 'Simple',
             'title': title,
-            'content': output
+            'content': card_text
         },
         'reprompt': {
             'outputSpeech': {
@@ -160,7 +183,6 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         },
         'shouldEndSession': should_end_session
     }
-
 def build_response(session_attributes, speechlet_response):
     """
     constructs a larger response including session attributes
@@ -186,7 +208,7 @@ def get_welcome_response():
     reprompt_text = "Would you like me to convert a number?"
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, speech_output, reprompt_text, should_end_session))
 
 # Intents that lead to this method: AMAZON.CancelIntent
 def handle_session_end_request():
@@ -200,7 +222,7 @@ def handle_session_end_request():
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
-        card_title, speech_output, None, should_end_session))
+        card_title, speech_output, speech_output, None, should_end_session))
 
 # --------------- Events ------------------
 
