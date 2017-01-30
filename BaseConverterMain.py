@@ -50,6 +50,12 @@ def base_converter_intent_handler(intent):
         card_output = output
         reprompt_text = "Please try again with a base between 1 and 36."
         should_end_session = False
+    elif not is_in_base(num_to_convert, init_base):
+        title = "Failed to Convert Base"
+        output = str(process_output(num_to_convert, init_base)) + " is not a valid base " + str(init_base) + " number."
+        card_output = str(num_to_convert) + " is not a valid base " + str(init_base) + " number."
+        reprompt_text = "Please try again with a base between 1 and 36."
+        should_end_session = False
     else:
         # converting the number from init_base into base 10 using the int method
         converted_num = int(num_to_convert, init_base)
@@ -120,7 +126,7 @@ def pull_bases_from_intent(intent):
     return num_to_convert, init_base, final_base
 
 
-# Note: for this method, num should be a string (to allow for bases higher than 36)
+# Note: for this method, num should be a string (to allow for bases higher than 10)
 def is_in_base(num_str, base):
     """
     Returns True if the num is a valid number in base base
@@ -129,7 +135,7 @@ def is_in_base(num_str, base):
     Handles bases up to 36
     """
     # Creating a list of all the proper chars in the specified base by slicing our BASE_STRING
-    chars_in_base = BASE_STRING[base]
+    chars_in_base = BASE_STRING[:base]
     # Note: this algorithm isn't the most efficient, but it will gurantee that num_str is proper
     for i in range(0, len(num_str)):
         if not num_str[i] in chars_in_base:
@@ -188,7 +194,7 @@ def build_response(session_attributes, speechlet_response):
     constructs a larger response including session attributes
     """
     return {
-        'version': '1.0.B', # NOTE: update this with current app version
+        'version': '1.0.D', # NOTE: update this with current app version
         'sessionAttributes': session_attributes,
         'response': speechlet_response
     }
