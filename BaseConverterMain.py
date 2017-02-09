@@ -28,13 +28,13 @@ def base_converter_intent_handler(intent):
 
     if num_to_convert == NO_INPUT or num_to_convert == INPUT_NOT_NUMBER:
         title = "Failed to Convert Base"
-        output = "Sorry, I did not hear your number to convert." + num_to_convert
+        output = "Sorry, I did not hear your number to convert."
         card_output = output
         reprompt_text = "Please try again while providing me a number."
         should_end_session = False
     elif final_base == NO_INPUT or final_base == INPUT_NOT_NUMBER:
         title = "Failed to Convert Base"
-        output = "Sorry, I did not hear your final base." + final_base
+        output = "Sorry, I did not hear your final base."
         card_output = output
         reprompt_text = "Please try again with a proper number for the final base."
         should_end_session = False
@@ -78,7 +78,7 @@ def base_converter_intent_handler(intent):
         reprompt_text = ""
         should_end_session = True
 
-    session_attributes = ""
+    session_attributes = {}
     return build_response(session_attributes, build_speechlet_response(title, output, card_output, reprompt_text, should_end_session))
 
 # adds spaces between each letter in the word if the base is greater than 10
@@ -212,7 +212,7 @@ def build_response(session_attributes, speechlet_response):
     constructs a larger response including session attributes
     """
     return {
-        'version': '1.0.D', # NOTE: update this with current app version
+        'version': '1.0.E', # NOTE: update this with current app version
         'sessionAttributes': session_attributes,
         'response': speechlet_response
     }
