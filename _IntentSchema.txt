@@ -4,15 +4,15 @@
       "intent": "CONVERTBASEINTENT",
       "slots": [
         {
-          "name": "to_convert",
+          "name": "toConvert",
           "type": "AMAZON.NUMBER"
         },
         {
-          "name": "init_base",
+          "name": "initBase",
           "type": "AMAZON.NUMBER"
         },
         {
-          "name": "final_base",
+          "name": "finalBase",
           "type": "AMAZON.NUMBER"
         } 
       ] 

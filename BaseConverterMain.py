@@ -23,34 +23,41 @@ def base_converter_intent_handler(intent):
     num_to_convert, init_base, final_base = pull_bases_from_intent(intent)
 
     # constructing a special message if any of the input variables are bad
-    # note, its not the most space efficient code to have, but having a large if/else allows 
-    # for our error messages to easily be changed and compared to each other
-    if num_to_convert == "bad num_to_convert input":
+    # note, its not the most space efficient code to have, but having a large if/else  
+    # allows for "contextualized" error messages that let the user know what to fix
+
+    if num_to_convert == NO_INPUT or num_to_convert == INPUT_NOT_NUMBER:
         title = "Failed to Convert Base"
-        output = "I couldn't handle your request, because you didn't give me a number to convert."
+        output = "Sorry, I did not hear your number to convert." + num_to_convert
         card_output = output
         reprompt_text = "Please try again while providing me a number."
         should_end_session = False
-    elif final_base == "bad final_base input":
+    elif final_base == NO_INPUT or final_base == INPUT_NOT_NUMBER:
         title = "Failed to Convert Base"
-        output = "I couldn't handlde your request, because your final base was not a number."
+        output = "Sorry, I did not hear your final base." + final_base
         card_output = output
         reprompt_text = "Please try again with a proper number for the final base."
+        should_end_session = False
+    elif init_base == INPUT_NOT_NUMBER:
+        title = "Failed to Convert Base"
+        output = "Sorry, I did not hear your initial base."
+        card_output = output
+        reprompt_text = "Please try again while providing me a number."
         should_end_session = False
     # If the numbers are integers, we check to see if they are within proper boundaries
     elif init_base < 1 or init_base > 10:
         title = "Failed to Convert Base"
-        output = "I couldn't handle your request, because your initial base was not between 1 and 10."
+        output = "I could not handle your request, because your initial base was not between 1 and 10."
         card_output = output
         reprompt_text = "Please try again with a base between 1 and 10."
         should_end_session = False
     elif final_base < 1 or final_base > 36:
         title = "Failed to Convert Base"
-        output = "I couldn't handle your request, because your final base was not between 1 and 36."
+        output = "I could not handle your request, because your final base was not between 1 and 36."
         card_output = output
         reprompt_text = "Please try again with a base between 1 and 36."
         should_end_session = False
-    elif not is_in_base(num_to_convert, init_base):
+    elif not is_in_base(str(num_to_convert), init_base):
         title = "Failed to Convert Base"
         output = str(process_output(num_to_convert, init_base)) + " is not a valid base " + str(init_base) + " number."
         card_output = str(num_to_convert) + " is not a valid base " + str(init_base) + " number."
@@ -58,7 +65,7 @@ def base_converter_intent_handler(intent):
         should_end_session = False
     else:
         # converting the number from init_base into base 10 using the int method
-        converted_num = int(num_to_convert, init_base)
+        converted_num = int(str(num_to_convert), init_base)
 
         # converting a number from base 10 into final_base
         converted_num = convert_from_ten(converted_num, final_base)
@@ -96,40 +103,46 @@ def pull_bases_from_intent(intent):
 
     Returns: num_to_convert as a string, init_base and final_base as integers
     """
+    # Reading the input values as per the guidelines:
+    # https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/handling-requests-sent-by-alexa#invalid-numeric-date-time-and-duration-slots
+
     # first, we must move to searching through the intent slots
     intent = intent["slots"]
 
-    # pulling the various user inputs from the intent
-    # note, we don't conver the actual number to an int, because
-    # we are going to use the int method later to convert it to its first base
-    try:
-        num_to_convert = intent["to_convert"]["value"]
-    except:
-        # theoretically, this should never be reached unless the user doesn't give a number
-        num_to_convert = "bad num_to_convert input"
-    # note, init_base cannot be greater than 10, because it is unclear if AMAZON.NUMBER
-    # handles number in base > 10
+    # pulling the values from the intent, and attempting to convert them to integers
+    num_to_convert = process_num(intent["toConvert"]["value"])
+    init_base = process_num(intent["initBase"]["value"])
+    final_base = process_num(intent["finalBase"]["value"])
 
-    # we don't specify an exception type here because we aren't doing anything with that info
-    # we can construct a message for the user later
-    # init_base will default to 10 if bad / no input is specified
-    try:
-        init_base = int(intent["init_base"]["value"])
-    except:
+    # allowing the user to not specify an initial base, and have it defaytk to 10
+    if init_base == NO_INPUT:
         init_base = 10
-
-    try:
-        final_base = int(intent["final_base"]["value"])
-    except:
-        final_base = "bad final_base input"
-
     return num_to_convert, init_base, final_base
 
+# number processing error messages
+NO_INPUT = "no input detected"
+INPUT_NOT_NUMBER = "input is not a number"
+
+# method to convert an intent value into an integer, and trap errors
+def process_num(num):
+    """
+    Attempts to convert the provided num (as a string) into an integer
+    if the input is "?" (what Alexa passes if there is no input), return NO_INPUT
+    if the input errors when attempting to convert to an intger, return INPUT_NOT_NUMBER
+    otherwise, return the number converted to an int
+    """
+    if num != "?" and num != None:
+        try:
+            num = int(num)
+        except ValueError:
+            return INPUT_NOT_NUMBER
+        return num
+    return NO_INPUT
 
 # Note: for this method, num should be a string (to allow for bases higher than 10)
 def is_in_base(num_str, base):
     """
-    Returns True if the num is a valid number in base base
+    Returns True if the num is a valid number in base "base"
     (Returns False otherwise)
 
     Handles bases up to 36
