@@ -111,8 +111,13 @@ def pull_bases_from_intent(intent):
 
     # pulling the values from the intent, and attempting to convert them to integers
     num_to_convert = process_num(intent["toConvert"]["value"])
-    init_base = process_num(intent["initBase"]["value"])
     final_base = process_num(intent["finalBase"]["value"])
+   
+    # note, we need to error trap init_base because it could potentially not have a "value"
+    try:
+        init_base = process_num(intent["initBase"]["value"])
+    except:
+        init_base = process_num(None)
 
     # allowing the user to not specify an initial base, and have it defaytk to 10
     if init_base == NO_INPUT:
